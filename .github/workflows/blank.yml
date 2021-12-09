@@ -1,0 +1,34 @@
+name: test Screenshot
+on: [push]
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        
+      - name: Add X11
+        run: |
+          brew install --cask xquartz
+          sudo /opt/X11/libexec/privileged_startx || true
+        working-directory: .
+        
+      - name: Start Xvfb
+        run: |
+            PATH=$PATH:/opt/X11/bin
+            Xvfb :1 &
+            export DISPLAY=:1
+
+      - name: Open Emulator
+        uses: reactivecircus/android-emulator-runner@v2 # install and create the Emulator
+        with:
+          api-level: 29
+          arch: x86_64
+          profile: Nexus 6
+          emulator-options: -no-snapshot-save -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: screencapture screenshot.png
+      - uses: actions/upload-artifact@v2
+        with:
+          name: screenshot
+          path: screenshot.png
