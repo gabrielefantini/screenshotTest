@@ -27,7 +27,7 @@ jobs:
           arch: x86_64
           profile: Nexus 6
           emulator-options: -no-snapshot-save -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: screencapture screenshot.png
+          script: screencapture -C -T 80 screenshot.png
       - uses: actions/upload-artifact@v2
         with:
           name: screenshot
